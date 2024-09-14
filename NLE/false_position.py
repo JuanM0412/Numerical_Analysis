@@ -1,15 +1,14 @@
 import pandas as pd
 import numpy as np
 import math
+from math import cos
 
 
 def evaluate_function(function_expression, x_value):
-    """Evaluate the function at a given point x."""
-    return eval(function_expression, {"x": x_value, "np": np, "math": math, "abs": abs})
+    return eval(function_expression, {'x': x_value, 'np': np, 'math': math, 'abs': abs, 'cos': cos})
 
 
 def false_position_method(x0, x1, tolerance, max_iterations, function_expression):
-    """Perform the False Position (Regla Falsa) method."""
     function_values = []
     root_approximations = []
     errors = []
@@ -21,7 +20,7 @@ def false_position_method(x0, x1, tolerance, max_iterations, function_expression
     error = 100
     
     if function_x0 * function_x1 > 0:
-        print("No se puede aplicar el método: f(x0) y f(x1) tienen el mismo signo.")
+        print('No se puede aplicar el método: f(x0) y f(x1) tienen el mismo signo.')
         return
     
     function_values.append(function_x0)
@@ -54,7 +53,6 @@ def false_position_method(x0, x1, tolerance, max_iterations, function_expression
 
 
 def print_results(root_approximations, function_values, errors, iteration_numbers, tolerance, max_iterations):
-    """Print the results in a table format."""
     results = pd.DataFrame({
         'Iteration': iteration_numbers,
         'x_n': root_approximations,
@@ -65,19 +63,19 @@ def print_results(root_approximations, function_values, errors, iteration_number
     print(results)
     
     if function_values[-1] == 0:
-        print(f"{root_approximations[-1]} es una raíz de f(x)")
+        print(f'{root_approximations[-1]} es una raíz de f(x)')
     elif errors[-1] < tolerance:
-        print(f"{root_approximations[-1]} es una aproximación de una raíz de f(x) con una tolerancia de {tolerance}")
+        print(f'{root_approximations[-1]} es una aproximación de una raíz de f(x) con una tolerancia de {tolerance}')
     else:
-        print(f"El método fracasó en {max_iterations} iteraciones")
+        print(f'El método fracasó en {max_iterations} iteraciones')
     
 
 def main():
-    x0 = float(input("Ingrese el valor inicial X0: "))
-    x1 = float(input("Ingrese el valor inicial X1: "))
-    tolerance = float(input("Ingrese la tolerancia deseada: "))
-    max_iterations = int(input("Ingrese el número máximo de iteraciones: "))
-    function_expression = input("Ingrese la función f(x) a evaluar (use 'x' como la variable): ")
+    x0 = float(input('Enter X0: '))
+    x1 = float(input('Enter X1: '))
+    tolerance = float(input('Enter the desired tolerance: '))
+    max_iterations = int(input('Enter the maximum number of iterations: '))
+    function_expression = input('Enter the function f(x) to evaluate (use x as the variable): ')
 
     root_approximations, function_values, errors, iteration_numbers = false_position_method(
         x0, x1, tolerance, max_iterations, function_expression)
@@ -85,5 +83,5 @@ def main():
     print_results(root_approximations, function_values, errors, iteration_numbers, tolerance, max_iterations)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -7,37 +7,41 @@ def evaluate_function(function_expression, x_value):
     return eval(function_expression, {'x': x_value, 'np': np, 'math': math, 'abs': abs})
 
 
-def newton_raphson_method(initial_guess, tolerance, max_iterations, function_expression, derivative_expression):
+def secant_method(x0, x1, tolerance, max_iterations, function_expression):
     function_values = []
     root_approximations = []
     errors = []
     iteration_numbers = []
     
-    x_current = initial_guess
-    function_current = evaluate_function(function_expression, x_current)
-    derivative_current = evaluate_function(derivative_expression, x_current)
+    function_x0 = evaluate_function(function_expression, x0)
+    function_x1 = evaluate_function(function_expression, x1)
     iteration_count = 0
     error = 100
+
+    x_next = x1
+    function_current = evaluate_function(function_expression, x_next)
     
     function_values.append(function_current)
-    root_approximations.append(x_current)
+    root_approximations.append(x_next)
     errors.append(error)
     iteration_numbers.append(iteration_count)
     
-    while error > tolerance and function_current != 0 and derivative_current != 0 and iteration_count < max_iterations:
-        x_next = x_current - function_current / derivative_current
-        derivative_current = evaluate_function(derivative_expression, x_next)
+    while error > tolerance and function_current != 0 and iteration_count < max_iterations:
+        x_next = x1 - (function_x1 * (x1 - x0) / (function_x1 - function_x0))
         function_current = evaluate_function(function_expression, x_next)
         
         function_values.append(function_current)
         root_approximations.append(x_next)
         iteration_count += 1
-        error = abs(root_approximations[iteration_count] - root_approximations[iteration_count-1])
+        error = abs(root_approximations[iteration_count] - root_approximations[iteration_count - 1])
         
         iteration_numbers.append(iteration_count)
         errors.append(error)
         
-        x_current = x_next
+        x0 = x1
+        x1 = x_next
+        function_x0 = evaluate_function(function_expression, x0)
+        function_x1 = evaluate_function(function_expression, x1)
     
     return root_approximations, function_values, errors, iteration_numbers
 
@@ -61,14 +65,14 @@ def print_results(root_approximations, function_values, errors, iteration_number
     
 
 def main():
-    initial_guess = float(input('Enter the initial value X0: '))
+    x0 = float(input('Enter X0: '))
+    x1 = float(input('Enter X1: '))
     tolerance = float(input('Enter the desired tolerance: '))
     max_iterations = int(input('Enter the maximum number of iterations: '))
     function_expression = input('Enter the function f(x) to evaluate (use x as the variable): ')
-    derivative_expression = input('Enter the derivative of the function f(x) (use x as the variable): ')
 
-    root_approximations, function_values, errors, iteration_numbers = newton_raphson_method(
-        initial_guess, tolerance, max_iterations, function_expression, derivative_expression)
+    root_approximations, function_values, errors, iteration_numbers = secant_method(
+        x0, x1, tolerance, max_iterations, function_expression)
     
     print_results(root_approximations, function_values, errors, iteration_numbers, tolerance, max_iterations)
 
