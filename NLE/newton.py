@@ -7,7 +7,7 @@ def evaluate_function(function_expression, x_value):
     return eval(function_expression, {'x': x_value, 'np': np, 'math': math, 'abs': abs})
 
 
-def newton_raphson_method(initial_guess, tolerance, max_iterations, function_expression, derivative_expression):
+def newton_raphson_method(initial_guess, tolerance, max_iterations, function_expression, derivative_expression, error_type):
     function_values = []
     root_approximations = []
     errors = []
@@ -32,7 +32,10 @@ def newton_raphson_method(initial_guess, tolerance, max_iterations, function_exp
         function_values.append(function_current)
         root_approximations.append(x_next)
         iteration_count += 1
-        error = abs(root_approximations[iteration_count] - root_approximations[iteration_count-1])
+        if error_type == 0: #absolute error
+            error = abs(root_approximations[iteration_count] - root_approximations[iteration_count - 1])
+        else: #relative error
+            error = abs((root_approximations[iteration_count] - root_approximations[iteration_count - 1])/root_approximations[iteration_count])
         
         iteration_numbers.append(iteration_count)
         errors.append(error)
@@ -66,9 +69,10 @@ def main():
     max_iterations = int(input('Enter the maximum number of iterations: '))
     function_expression = input('Enter the function f(x) to evaluate (use x as the variable): ')
     derivative_expression = input('Enter the derivative of the function f(x) (use x as the variable): ')
+    error_type = int(input('Enter 0 for absolute error or 1 for relative error: '))
 
     root_approximations, function_values, errors, iteration_numbers = newton_raphson_method(
-        initial_guess, tolerance, max_iterations, function_expression, derivative_expression)
+        initial_guess, tolerance, max_iterations, function_expression, derivative_expression, error_type)
     
     print_results(root_approximations, function_values, errors, iteration_numbers, tolerance, max_iterations)
 

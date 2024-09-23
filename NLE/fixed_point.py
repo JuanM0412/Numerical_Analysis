@@ -8,7 +8,8 @@ def get_user_input():
     max_iterations = int(input('Enter the maximum number of iterations: '))
     function_expression = input('Enter the function f(x) to evaluate (use x as the variable): ')
     g_expression = input('Enter the function g(x) (use x as the variable): ')
-    return initial_guess, tolerance, max_iterations, function_expression, g_expression
+    error_type = int(input('Enter 0 for absolute error or 1 for relative error: '))
+    return initial_guess, tolerance, max_iterations, function_expression, g_expression, error_type
 
 
 def evaluate_function_at_point(function_expression, x):
@@ -28,7 +29,7 @@ def print_result_failure(max_iterations):
     print(f'Failed to find a root within {max_iterations} iterations')
 
 
-def fixed_point_iteration(initial_guess, tolerance, max_iterations, function_expression, g_expression):
+def fixed_point_iteration(initial_guess, tolerance, max_iterations, function_expression, g_expression, error_type):
     iteration_data = []
 
     x = initial_guess
@@ -42,7 +43,10 @@ def fixed_point_iteration(initial_guess, tolerance, max_iterations, function_exp
         x_new = evaluate_function_at_point(g_expression, x)
         f_value = evaluate_function_at_point(function_expression, x_new)
         iteration_count += 1
-        error = abs(x_new - x)
+        if error_type == 0: #absolute error
+            error = abs(x_new - x)
+        else: #relative error
+            error = abs((x_new - x)/x_new)
         x = x_new
 
         iteration_data.append((iteration_count, x, f_value, error))
@@ -62,8 +66,8 @@ def fixed_point_iteration(initial_guess, tolerance, max_iterations, function_exp
 
 
 def main():
-    initial_guess, tolerance, max_iterations, function_expression, g_expression = get_user_input()
-    _, _ = fixed_point_iteration(initial_guess, tolerance, max_iterations, function_expression, g_expression)
+    initial_guess, tolerance, max_iterations, function_expression, g_expression, error_type = get_user_input()
+    _, _ = fixed_point_iteration(initial_guess, tolerance, max_iterations, function_expression, g_expression, error_type)
 
 
 if __name__ == '__main__':

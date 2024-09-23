@@ -12,7 +12,8 @@ def get_user_input():
     tolerance = float(input("Enter the desired tolerance: "))
     max_iterations = int(input("Enter the maximum number of iterations: "))
     function_expression = input("Enter the function to evaluate (use 'x' as the variable): ")
-    return initial_left_bound, initial_right_bound, tolerance, max_iterations, function_expression
+    error_type = int(input('Enter 0 for absolute error or 1 for relative error: '))
+    return initial_left_bound, initial_right_bound, tolerance, max_iterations, function_expression, error_type
 
 
 def evaluate_function_at_point(function_expression, x):
@@ -45,7 +46,7 @@ def print_result_failure(max_iterations):
     print(f"Failed to find a root within {max_iterations} iterations")
 
 
-def bisection_method(initial_left_bound, initial_right_bound, tolerance, max_iterations, function_expression):
+def bisection_method(initial_left_bound, initial_right_bound, tolerance, max_iterations, function_expression, error_type):
     """
     Implements the bisection method to find a root of the given function.
     The method works by repeatedly narrowing down the interval [Xi, Xs] until the root is found or the tolerance is met.
@@ -78,7 +79,10 @@ def bisection_method(initial_left_bound, initial_right_bound, tolerance, max_ite
             previous_midpoint = midpoint
             midpoint = (initial_left_bound + initial_right_bound) / 2
             function_at_midpoint = evaluate_function_at_point(function_expression, midpoint)
-            error = abs(midpoint - previous_midpoint)
+            if error_type == 0: #absolute error
+                error = abs(midpoint - previous_midpoint)
+            else: #relative error
+                error = abs((midpoint - previous_midpoint)/midpoint)
 
             iteration_count += 1
             iteration_data.append((iteration_count, midpoint, function_at_midpoint, error))
@@ -101,8 +105,8 @@ def bisection_method(initial_left_bound, initial_right_bound, tolerance, max_ite
 
 
 def main():
-    initial_left_bound, initial_right_bound, tolerance, max_iterations, function_expression = get_user_input()
-    _, _ = bisection_method(initial_left_bound, initial_right_bound, tolerance, max_iterations, function_expression)
+    initial_left_bound, initial_right_bound, tolerance, max_iterations, function_expression, error_type = get_user_input()
+    _, _ = bisection_method(initial_left_bound, initial_right_bound, tolerance, max_iterations, function_expression, error_type)
 
 
 if __name__ == "__main__":
